@@ -1,0 +1,25 @@
+// Base
+@import "../../node_modules/reset-css/sass/_reset"
+
+body
+  height: 100vh
+  background: rgb(2,0,36)
+  background: radial-gradient(circle, rgba(2,0,36,1) 4%, rgba(9,13,121,1) 68%, rgba(0,212,255,1) 100%)
+
+*
+  box-sizing: border-box
+
+// Helpers
+  @import 'helpers/mixins/_text-default'
+  @import 'helpers/mixins/_button-default'
+  @import 'helpers/mixins/_icon-helper'
+  @import 'helpers/mixins/_field-default'
+  @import '_png-sprite'
+
+// Layouts
+  @import 'layouts/_greeting'
+  @import 'layouts/_registration'
+  @import 'layouts/_start'
+  @import 'layouts/_footer'
+  @import 'layouts/_socials'
+@import 'layouts/_slider'

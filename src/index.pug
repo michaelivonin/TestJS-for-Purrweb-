@@ -1,0 +1,12 @@
+include pug/project-settings.pug
+include pug/mixins/mixins.pug
+
+doctype html
+html
+  head(lang="en")
+    include pug/metatags.pug
+    +title('Web page')
+    include pug/styles.pug
+  body
+    include pug/includes/slider
+  script(src="js/index.js")
