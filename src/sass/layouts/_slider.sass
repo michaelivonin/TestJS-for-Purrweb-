@@ -3,17 +3,50 @@
   height: 100%
   margin: auto
   padding: 15px
+  display: flex
+  justify-content: center
+  align-items: center
 
 .slider
-  display: grid
-  //grid-template-rows: 1 1 2
+  display: flex
+  justify-content: center
+  align-items: center
 
   &__button
+    font-size: 30px
+    color: white
+    background-color: transparent
+    border: none
+    outline: none
+    &:hover
+      cursor: pointer
+      color: wheat
+    &:active
+      position: relative
+      top: 2px
+      outline: none
+
+  &__button-previous
+    transform: rotateY(180deg)
 
   &__screen
-    //position: relative
-
-  &__item
     width: 400px
     height: 300px
-    position: absolute
+    overflow: hidden
+    border-radius: 4px
+
+  &__box
+    width: 9999px
+    font-size: 0
+
+  &__item
+    display: inline-flex
+    justify-content: center
+    align-items: center
+    width: 400px
+    height: 300px
+    background-color: antiquewhite
+
+  &__item-heading
+    font-size: 40px
+    color: rgb(2,0,36)
