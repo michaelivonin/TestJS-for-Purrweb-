@@ -32,12 +32,16 @@
   &__screen
     width: 400px
     height: 300px
-    overflow: hidden
+    //overflow: hidden
     border-radius: 4px
 
   &__box
     width: 9999px
     font-size: 0
+    margin-left: -400px
+    &:before, &:after
+      display: table
+      content: ''
 
   &__item
     display: inline-flex
@@ -46,6 +50,17 @@
     width: 400px
     height: 300px
     background-color: antiquewhite
+
+  &__item_active, &__item_next-active, &__item_previous-active
+    display: inline-flex
+
+  &__item_hidden
+    display: none
+
+  &__item_last
+    display: inline-flex
+    float: left
+
 
   &__item-heading
     font-size: 40px
