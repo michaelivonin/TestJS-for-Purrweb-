@@ -6,9 +6,6 @@ let buttonPrevious = slider.querySelector(".slider__button-previous"),
   slides = box.querySelectorAll(".slider__item"),
   slideWidth = parseInt(getComputedStyle(slider.querySelector(".slider__item")).width),
   dots = slider.querySelector(".slider__dots"),
-  //start = 0,
-  //end = -slideWidth * ( slides.length - 1 ),
-  //position = start,
   selectedDot,
   disable = false;
 
@@ -21,16 +18,15 @@ function highlight(item) {
   selectedDot.classList.toggle("slider__dot_active");
 }
 
-highlight(slider.querySelectorAll(".slider__dot")[0]);
+highlight(dots.children[0]);
 
 (function rebuildSlides() {
   box.append(slides[0].cloneNode(true));
   box.prepend(slides[slides.length - 1].cloneNode(true));
 })();
 
-let slidesRebuild = box.querySelectorAll(".slider__item");
-
 function rebuildEdge() {
+  let slidesRebuild = box.querySelectorAll(".slider__item");
   let position = parseInt(getComputedStyle(box).marginLeft);
 
   if ( position > ( (slidesRebuild.length - 1) * (-slideWidth) ) && position < 0 || position < 0 && position > 0 ) {
@@ -65,7 +61,6 @@ function rebuildEdge() {
 }
 
 function animate({duration, timing, draw}) {
-
   let start = performance.now();
 
   requestAnimationFrame(function animate(time) {
@@ -85,66 +80,87 @@ function animate({duration, timing, draw}) {
   });
 }
 
-function moveRight() {
-  if (disable) return;
-
-  disable = true;
-
+function moveRight({offset = slideWidth}) {
   let position = parseInt(getComputedStyle(box).marginLeft);
 
   animate({
-    duration: 500,
+    duration: 250,
     timing(timeFraction) {
       return timeFraction;
     },
     draw(progress) {
-      box.style.marginLeft = `${ (progress * slideWidth) + position }px`;
+      box.style.marginLeft = `${ (progress * offset) + position }px`;
     }
   });
+}
 
-  if ( dots.firstElementChild.classList.contains("slider__dot_active") ) {
+function moveLeft({offset = slideWidth}) {
+  let position = parseInt(getComputedStyle(box).marginLeft);
+
+  animate({
+    duration: 250,
+    timing(timeFraction) {
+      return timeFraction;
+    },
+    draw(progress) {
+      box.style.marginLeft = `${ ( progress * (-offset) ) + position }px`;
+    }
+  });
+}
+
+buttonPrevious.addEventListener("click", () => {
+  if (disable) return;
+
+  disable = true;
+
+  moveRight({});
+
+  if ( dots.firstElementChild === selectedDot ) {
     highlight(dots.lastElementChild);
     return;
   }
 
-  highlight(dots.querySelector(".slider__dot_active").previousElementSibling);
-}
+  highlight(selectedDot.previousElementSibling);
+});
 
-function moveLeft() {
+buttonNext.addEventListener("click", () => {
   if (disable) return;
 
   disable = true;
 
-  let position = parseInt(getComputedStyle(box).marginLeft);
+  moveLeft({});
 
-  animate({
-    duration: 500,
-    timing(timeFraction) {
-      return timeFraction;
-    },
-    draw(progress) {
-      box.style.marginLeft = `${ ( progress * (-slideWidth) ) + position }px`;
-    }
-  });
-
-  if ( dots.lastElementChild.classList.contains("slider__dot_active") ) {
+  if ( dots.lastElementChild === selectedDot ) {
     highlight(dots.firstElementChild);
     return;
   }
 
-  highlight(dots.querySelector(".slider__dot_active").nextElementSibling);
-}
-
-buttonPrevious.addEventListener("click", moveRight);
-
-buttonNext.addEventListener("click", moveLeft);
+  highlight(selectedDot.nextElementSibling);
+});
 
 dots.addEventListener("click", (event) => {
   let target = event.target;
 
   if (target.tagName !== "LI") return;
 
-  if (target.classList.contains("slider__dot_active")) return;
+  if (target === selectedDot) return;
+
+  if (disable) return;
+
+  disable = true;
+
+  let next = Array.from(dots.children).indexOf(target);
+  let previous = Array.from(dots.children).indexOf(selectedDot);
+  let multiplier;
+
+  if (next > previous) {
+    multiplier = (next - previous) * slideWidth;
+    moveLeft({offset: multiplier});
+  }
+  if (next < previous) {
+    multiplier = (previous - next) * slideWidth;
+    moveRight({offset: multiplier});
+  }
 
   highlight(target);
 });
