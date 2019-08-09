@@ -3,29 +3,54 @@
 let buttonPrevious = slider.querySelector(".slider__button-previous"),
   buttonNext = slider.querySelector(".slider__button-next"),
   box = slider.querySelector(".slider__box"),
-  items = box.querySelectorAll(".slider__item"),
-  itemWidth = parseInt(getComputedStyle(slider.querySelector(".slider__item")).width),
+  slides = box.querySelectorAll(".slider__item"),
+  slideWidth = parseInt(getComputedStyle(slider.querySelector(".slider__item")).width),
   start = 0,
-  end = -itemWidth * ( items.length - 1 ),
-  position = start;
+  end = -slideWidth * ( slides.length - 1 ),
+  position = start,
+  disable = false;
 
-box.append(items[0].cloneNode(true));
-box.prepend(items[items.length - 1].cloneNode(true));
+function rebuildSlides() {
+  box.append(slides[0].cloneNode(true));
+  box.prepend(slides[slides.length - 1].cloneNode(true));
+}
 
-let itemsRebuild = box.querySelectorAll(".slider__item");
-itemsRebuild[1].classList.add("slider__item_active");
+rebuildSlides();
 
-/*for (let i = 0; i <= (itemsRebuild.length - 1); i++) {
+let slidesRebuild = box.querySelectorAll(".slider__item");
+//slidesRebuild[1].classList.add("slider__item_active");
+
+function rebuildEdge() {
+  let position = parseInt(getComputedStyle(box).marginLeft);
+
+  if ( position > ( (slidesRebuild.length - 1) * (-slideWidth) ) && position < 0 || position < 0 && position > 0 ) {
+    return;
+  } else if ( position === ( (slidesRebuild.length - 1) * (-slideWidth) ) ) {
+    box.style.marginLeft = `${ (-slideWidth) }px`;
+
+    while (box.children.length !== 2) {
+      box.firstChild.remove();
+    }
+
+    for (let i = 2; i < slidesRebuild.length; i++) {
+      box.append(slidesRebuild[i].cloneNode(true));
+    }
+  }
+}
+
+
+
+/*for (let i = 0; i <= (slidesRebuild.length - 1); i++) {
   if (i === 0) {
-    items[i].classList.add("slider__item_active");
+    slides[i].classList.add("slider__item_active");
   } else if (i === 1) {
-    items[i].classList.add("slider__item_next-active");
+    slides[i].classList.add("slider__item_next-active");
   } else {
-    items[i].classList.add("slider__item_hidden");
+    slides[i].classList.add("slider__item_hidden");
   }
 }*/
 
-//items[items.length - 1].classList.add("slider__item_last");
+//slides[slides.length - 1].classList.add("slider__item_last");
 
 
 function animate({duration, timing, draw}) {
@@ -42,49 +67,67 @@ function animate({duration, timing, draw}) {
 
     if (timeFraction < 1) {
       requestAnimationFrame(animate);
+    } else {
+      disable = false;
+      rebuildEdge();
     }
   });
 }
 
 buttonPrevious.onclick = () => {
+  if (disable) return;
+
+  /*console.log(position);
   if (position === start) {
-    position -= itemWidth;
+    position -= slideWidth;
+  } else if ( position <= ( (-slideWidth) * 2 ) ) {
+    //position += slideWidth
   } else {
-    position += itemWidth;
-  }
-  //let position = parseInt(getComputedStyle(box).marginLeft);
-  console.log(position);
+    //position += slideWidth;
+  }*/
+
+  disable = true;
+
+  let position = parseInt(getComputedStyle(box).marginLeft);
+  //console.log(position);
+
+
 
   animate({
-    duration: 250,
+    duration: 500,
     timing(timeFraction) {
       return timeFraction;
     },
     draw(progress) {
-      box.style.marginLeft = `${ (progress * itemWidth) + position }px`;
+      box.style.marginLeft = `${ (progress * slideWidth) + position }px`;
     }
   });
 };
 
 
 buttonNext.onclick = () => {
+  if (disable) return;
+  /*console.log(position);
   if (position === start) {
-    position -= itemWidth;
-  } else if (position >= itemWidth) {
-    position += itemWidth;
+    position -= slideWidth;
+  } else if (position >= slideWidth) {
+    position += slideWidth;
   } else {
-    position -= itemWidth;
-  }
-  //let position = parseInt(getComputedStyle(box).marginLeft);
-  console.log(position);
+    position -= slideWidth;
+  }*/
+
+  disable = true;
+
+  let position = parseInt(getComputedStyle(box).marginLeft);
+  //console.log(position);
 
   animate({
-    duration: 250,
+    duration: 500,
     timing(timeFraction) {
       return timeFraction;
     },
     draw(progress) {
-      box.style.marginLeft = `${ ( progress * (-itemWidth) ) + position }px`;
+      box.style.marginLeft = `${ ( progress * (-slideWidth) ) + position }px`;
     }
   });
 
@@ -95,7 +138,7 @@ buttonNext.onclick = () => {
 
   /*if (position === start) {
 
-    position -= itemWidth;
+    position -= slideWidth;
 
     itemNextActive.classList.toggle("slider__item_next-active");
     itemNextActive.classList.toggle("slider__item_active");
@@ -109,7 +152,7 @@ buttonNext.onclick = () => {
     //itemPreviousActive.classList.toggle("slider__item_previous-active");
     //itemPreviousActive.classList.toggle("slider__item_hidden");
 
-  }else if (position === (end + itemWidth)) {
+  }else if (position === (end + slideWidth)) {
     //position = start;
 
     itemNextActive.classList.toggle("slider__item_next-active");
@@ -128,7 +171,7 @@ buttonNext.onclick = () => {
 
   } else {
 
-    position -= itemWidth;
+    position -= slideWidth;
 
     itemNextActive.classList.toggle("slider__item_next-active");
     itemNextActive.classList.toggle("slider__item_active");
@@ -149,7 +192,7 @@ buttonNext.onclick = () => {
   if (!position) {
     position = end;
   } else {
-    position += itemWidth;
+    position += slideWidth;
   }
   box.style.marginLeft = `${position}px`;
 }
@@ -158,7 +201,7 @@ function moveRight() {
   if (position === end) {
     position = start;
   } else {
-    position -= itemWidth;
+    position -= slideWidth;
   }
   box.style.marginLeft = `${position}px`;
 }
@@ -186,7 +229,7 @@ buttonNext.onclick = () => moveRight();*/
     if (!position) {
       position = end;
     } else {
-      position += itemWidth;
+      position += slideWidth;
     }
     console.log(position);
     box.style.marginLeft = `${ ( timePassed * 0.004 ) + position }px`;
@@ -199,7 +242,7 @@ buttonNext.onclick = () => {
   if (position === end) {
     position = start;
   } else {
-    position -= itemWidth;
+    position -= slideWidth;
   }
 
   let timer = setInterval(() => {
