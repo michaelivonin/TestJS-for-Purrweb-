@@ -8,9 +8,14 @@
   align-items: center
 
 .slider
-  display: flex
-  justify-content: center
-  align-items: center
+  //display: flex
+  //justify-content: center
+  //align-items: center
+  display: grid
+  //grid-template-columns: 10% auto 10%
+  //grid-template-rows: 100%  7%
+  grid-template-areas: "button-previous top button-next" ". bottom ."
+  //justify-items: center
 
   &__button
     font-size: 30px
@@ -28,20 +33,22 @@
 
   &__button-previous
     transform: rotateY(180deg)
+    grid-area: button-previous
+
+  &__button-next
+    grid-area: button-next
 
   &__screen
     width: 400px
     height: 300px
     overflow: hidden
     border-radius: 4px
+    grid-area: top
 
   &__box
     width: 9999px
     font-size: 0
     margin-left: -400px
-    //&:before, &:after
-      display: table
-      content: ''
 
   &__item
     display: inline-flex
@@ -65,3 +72,24 @@
   &__item-heading
     font-size: 40px
     color: rgb(2,0,36)
+
+  &__dots
+    font-size: 0
+    grid-area: bottom
+    margin-top: 15px
+    width: 100%
+    display: inline-flex
+    justify-content: space-evenly
+
+  &__dot
+    display: inline-flex
+    width: 10px
+    height: 10px
+    border: 2px solid white
+    border-radius: 50%
+    &:hover
+      cursor: pointer
+      opacity: 0.6
+
+  &__dot_active
+    opacity: 0.6
