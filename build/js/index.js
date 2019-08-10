@@ -26,14 +26,14 @@ highlight(dots.children[0]);
 })();
 
 function rebuildEdge() {
-  let slidesRebuild = box.querySelectorAll(".slider__item");
+  let slidesRebuilt = box.querySelectorAll(".slider__item");
   let position = parseInt(getComputedStyle(box).marginLeft);
 
-  if ( position > ( (slidesRebuild.length - 1) * (-slideWidth) ) && position < 0 || position < 0 && position > 0 ) {
+  if ( position > ( (slidesRebuilt.length - 1) * (-slideWidth) ) && position < 0 || position < 0 && position > 0 ) {
 
     return;
 
-  } else if ( position === ( (slidesRebuild.length - 1) * (-slideWidth) ) ) {
+  } else if ( position === ( (slidesRebuilt.length - 1) * (-slideWidth) ) ) {
 
     box.style.marginLeft = `${ (-slideWidth) }px`;
 
@@ -41,20 +41,20 @@ function rebuildEdge() {
       box.firstElementChild.remove();
     }
 
-    for (let i = 2; i < slidesRebuild.length; i++) {
-      box.append(slidesRebuild[i].cloneNode(true));
+    for (let i = 2; i < slidesRebuilt.length; i++) {
+      box.append(slidesRebuilt[i].cloneNode(true));
     }
 
   } else {
 
-    box.style.marginLeft = `${ (slidesRebuild.length - 2) * (-slideWidth) }px`;
+    box.style.marginLeft = `${ (slidesRebuilt.length - 2) * (-slideWidth) }px`;
 
     while (box.children.length !== 2) {
       box.lastElementChild.remove();
     }
 
-    for (let i = slidesRebuild.length - 3; i >= 0; i--) {
-      box.prepend(slidesRebuild[i].cloneNode(true));
+    for (let i = slidesRebuilt.length - 3; i >= 0; i--) {
+      box.prepend(slidesRebuilt[i].cloneNode(true));
     }
 
   }
